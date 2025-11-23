@@ -1,5 +1,6 @@
 import { useSavingsProducts } from 'hooks/useSavingsProducts';
 import { useSavingsForm } from 'hooks/useSavingsForm';
+import { useDebounce } from 'hooks/useDebounce';
 import { Border, NavigationBar, Spacing, Tab } from 'tosslib';
 import { SavingsForm } from '../components/SavingsForm';
 import { ProductList } from '../components/ProductList';
@@ -10,7 +11,8 @@ export function SavingsCalculatorPage() {
   const { products } = useSavingsProducts();
   const { formState, handleTargetAmountChange, handleMonthlyAmountChange, handleSavingsTermChange } = useSavingsForm();
 
-  const monthlyAmount = parseInt(parseNumberWithComma(formState.monthlyAmount)) || 0;
+  const debouncedMonthlyAmount = useDebounce(formState.monthlyAmount);
+  const monthlyAmount = parseInt(parseNumberWithComma(debouncedMonthlyAmount)) || 0;
   const filteredProducts = filterSavingsProducts(products, {
     monthlyAmount,
     savingsTerm: formState.savingsTerm,
