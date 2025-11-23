@@ -3,12 +3,13 @@ import { useSavingsForm } from 'hooks/useSavingsForm';
 import { Border, NavigationBar, SelectBottomSheet, Spacing, Tab, TextField } from 'tosslib';
 import { ProductList } from '../components/ProductList';
 import { filterSavingsProducts } from '../utils/filterSavingsProducts';
+import { parseNumberWithComma } from '../utils/formatNumber';
 
 export function SavingsCalculatorPage() {
   const { products } = useSavingsProducts();
   const { formState, handleTargetAmountChange, handleMonthlyAmountChange, handleSavingsTermChange } = useSavingsForm();
 
-  const monthlyAmount = parseInt(formState.monthlyAmount) || 0;
+  const monthlyAmount = parseInt(parseNumberWithComma(formState.monthlyAmount)) || 0;
   const filteredProducts = filterSavingsProducts(products, {
     monthlyAmount,
     savingsTerm: formState.savingsTerm,

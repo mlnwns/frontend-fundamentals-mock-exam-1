@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { formatNumberWithComma } from '../utils/formatNumber';
 
 export interface SavingsFormState {
   targetAmount: string;
@@ -14,16 +15,18 @@ export const useSavingsForm = () => {
   });
 
   const handleTargetAmountChange = (value: string) => {
+    const formatted = formatNumberWithComma(value);
     setFormState(prev => ({
       ...prev,
-      targetAmount: value,
+      targetAmount: formatted,
     }));
   };
 
   const handleMonthlyAmountChange = (value: string) => {
+    const formatted = formatNumberWithComma(value);
     setFormState(prev => ({
       ...prev,
-      monthlyAmount: value,
+      monthlyAmount: formatted,
     }));
   };
 
