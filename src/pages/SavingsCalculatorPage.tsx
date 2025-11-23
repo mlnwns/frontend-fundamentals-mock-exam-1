@@ -9,12 +9,13 @@ import { ProductList } from '../components/ProductList';
 import { CalculationResult } from '../components/CalculationResult';
 import { filterSavingsProducts } from '../utils/filterSavingsProducts';
 import { parseNumberWithComma } from '../utils/formatNumber';
+import { TAB_VALUES, type TabValue } from '../types/tab';
 
 export function SavingsCalculatorPage() {
   const { products } = useSavingsProducts();
   const { formState, handleTargetAmountChange, handleMonthlyAmountChange, handleSavingsTermChange } = useSavingsForm();
   const { selectedProductId, handleSelectProduct, validateSelectedProduct } = useSelectedProduct();
-  const [activeTab, setActiveTab] = useState<'products' | 'results'>('products');
+  const [activeTab, setActiveTab] = useState<TabValue>(TAB_VALUES.PRODUCTS);
 
   const debouncedMonthlyAmount = useDebounce(formState.monthlyAmount);
   const monthlyAmount = parseInt(parseNumberWithComma(debouncedMonthlyAmount)) || 0;
@@ -24,11 +25,17 @@ export function SavingsCalculatorPage() {
     savingsTerm: formState.savingsTerm,
   });
 
-  const selectedProduct = products.find(p => p.id === selectedProductId) || null;
+  const selectedProduct = products.find(p => p.id === selectedProductId) ?? null;
 
   useEffect(() => {
     validateSelectedProduct(filteredProducts);
   }, [filteredProducts, validateSelectedProduct]);
+
+  const handleTabChange = (value: string) => {
+    if (value === TAB_VALUES.PRODUCTS || value === TAB_VALUES.RESULTS) {
+      setActiveTab(value);
+    }
+  };
 
   return (
     <>
@@ -45,16 +52,16 @@ export function SavingsCalculatorPage() {
       <Border height={16} />
       <Spacing size={8} />
 
-      <Tab onChange={value => setActiveTab(value as 'products' | 'results')}>
-        <Tab.Item value="products" selected={activeTab === 'products'}>
+      <Tab onChange={handleTabChange}>
+        <Tab.Item value={TAB_VALUES.PRODUCTS} selected={activeTab === TAB_VALUES.PRODUCTS}>
           적금 상품
         </Tab.Item>
-        <Tab.Item value="results" selected={activeTab === 'results'}>
+        <Tab.Item value={TAB_VALUES.RESULTS} selected={activeTab === TAB_VALUES.RESULTS}>
           계산 결과
         </Tab.Item>
       </Tab>
 
-      {activeTab === 'products' && (
+      {activeTab === TAB_VALUES.PRODUCTS && (
         <ProductList
           products={filteredProducts}
           selectedProductId={selectedProductId}
@@ -62,7 +69,7 @@ export function SavingsCalculatorPage() {
         />
       )}
 
-      {activeTab === 'results' && (
+      {activeTab === TAB_VALUES.RESULTS && (
         <CalculationResult
           targetAmount={targetAmount}
           monthlyAmount={monthlyAmount}
