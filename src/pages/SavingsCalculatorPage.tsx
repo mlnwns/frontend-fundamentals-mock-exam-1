@@ -1,6 +1,7 @@
 import { useSavingsProducts } from 'hooks/useSavingsProducts';
 import { useSavingsForm } from 'hooks/useSavingsForm';
 import { useDebounce } from 'hooks/useDebounce';
+import { useSelectedProduct } from 'hooks/useSelectedProduct';
 import { Border, NavigationBar, Spacing, Tab } from 'tosslib';
 import { SavingsForm } from '../components/SavingsForm';
 import { ProductList } from '../components/ProductList';
@@ -10,6 +11,7 @@ import { parseNumberWithComma } from '../utils/formatNumber';
 export function SavingsCalculatorPage() {
   const { products } = useSavingsProducts();
   const { formState, handleTargetAmountChange, handleMonthlyAmountChange, handleSavingsTermChange } = useSavingsForm();
+  const { selectedProductId, handleSelectProduct } = useSelectedProduct();
 
   const debouncedMonthlyAmount = useDebounce(formState.monthlyAmount);
   const monthlyAmount = parseInt(parseNumberWithComma(debouncedMonthlyAmount)) || 0;
@@ -42,7 +44,11 @@ export function SavingsCalculatorPage() {
         </Tab.Item>
       </Tab>
 
-      <ProductList products={filteredProducts} />
+      <ProductList
+        products={filteredProducts}
+        selectedProductId={selectedProductId}
+        onSelectProduct={handleSelectProduct}
+      />
 
       {/* 아래는 계산 결과 탭 내용이에요. 계산 결과 탭을 구현할 때 주석을 해제해주세요. */}
       {/* <Spacing size={8} />

@@ -1,11 +1,13 @@
-import { colors, ListRow } from 'tosslib';
+import { Assets, colors, ListRow } from 'tosslib';
 import type { SavingsProduct } from '../apis/savingsProduct/savingsProduct.type';
 
 interface ProductListProps {
   products: SavingsProduct[];
+  selectedProductId: string | null;
+  onSelectProduct: (productId: string) => void;
 }
 
-export function ProductList({ products }: ProductListProps) {
+export function ProductList({ products, selectedProductId, onSelectProduct }: ProductListProps) {
   if (products.length === 0) {
     return <ListRow contents={<ListRow.Texts type="1RowTypeA" top="조건에 맞는 상품을 찾을 수 없습니다." />} />;
   }
@@ -26,7 +28,8 @@ export function ProductList({ products }: ProductListProps) {
               bottomProps={{ fontSize: 13, color: colors.grey600 }}
             />
           }
-          onClick={() => {}}
+          right={selectedProductId === product.id ? <Assets.Icon name="icon-check-circle-green" /> : null}
+          onClick={() => onSelectProduct(product.id)}
         />
       ))}
     </>
