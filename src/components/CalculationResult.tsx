@@ -1,6 +1,7 @@
-import { Assets, colors, ListRow } from 'tosslib';
+import { colors, ListRow } from 'tosslib';
 import type { SavingsProduct } from '../apis/savingsProduct/savingsProduct.type';
 import { calculateRecommendedMonthly, getTopProductsByRate } from '../utils/calculationUtils';
+import { ProductRow } from './ProductRow';
 
 interface CalculationResultProps {
   targetAmount: number;
@@ -77,21 +78,11 @@ export function CalculationResult({
       />
 
       {topProducts.map(product => (
-        <ListRow
+        <ProductRow
           key={product.id}
-          contents={
-            <ListRow.Texts
-              type="3RowTypeA"
-              top={product.name}
-              topProps={{ fontSize: 16, fontWeight: 'bold', color: colors.grey900 }}
-              middle={`연 이자율: ${product.annualRate}%`}
-              middleProps={{ fontSize: 14, color: colors.blue600, fontWeight: 'medium' }}
-              bottom={`${product.minMonthlyAmount.toLocaleString()}원 ~ ${product.maxMonthlyAmount.toLocaleString()}원 | ${product.availableTerms}개월`}
-              bottomProps={{ fontSize: 13, color: colors.grey600 }}
-            />
-          }
-          right={selectedProductId === product.id ? <Assets.Icon name="icon-check-circle-green" /> : undefined}
-          onClick={() => onSelectProduct(product.id)}
+          product={product}
+          isSelected={selectedProductId === product.id}
+          onSelect={onSelectProduct}
         />
       ))}
     </>
