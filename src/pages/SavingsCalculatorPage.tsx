@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useSavingsProducts } from 'hooks/useSavingsProducts';
 import { useSavingsForm } from 'hooks/useSavingsForm';
 import { useDebounce } from 'hooks/useDebounce';
@@ -11,7 +12,7 @@ import { parseNumberWithComma } from '../utils/formatNumber';
 export function SavingsCalculatorPage() {
   const { products } = useSavingsProducts();
   const { formState, handleTargetAmountChange, handleMonthlyAmountChange, handleSavingsTermChange } = useSavingsForm();
-  const { selectedProductId, handleSelectProduct } = useSelectedProduct();
+  const { selectedProductId, handleSelectProduct, validateSelectedProduct } = useSelectedProduct();
 
   const debouncedMonthlyAmount = useDebounce(formState.monthlyAmount);
   const monthlyAmount = parseInt(parseNumberWithComma(debouncedMonthlyAmount)) || 0;
@@ -19,6 +20,10 @@ export function SavingsCalculatorPage() {
     monthlyAmount,
     savingsTerm: formState.savingsTerm,
   });
+
+  useEffect(() => {
+    validateSelectedProduct(filteredProducts);
+  }, [filteredProducts, validateSelectedProduct]);
 
   return (
     <>
